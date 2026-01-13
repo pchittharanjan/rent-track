@@ -290,7 +290,7 @@ export function ManageRoommatesModal({
 
           {/* Add Roommate Section */}
           {isAdmin && (
-            <Card className="frosted-glass bg-card/40">
+            <Card className="frosted-glass bg-card/90">
               <CardHeader>
                 <CardTitle className="text-lg font-normal flex items-center gap-2">
                   <UserPlus className="h-5 w-5" />
@@ -321,7 +321,7 @@ export function ManageRoommatesModal({
           )}
 
           {/* Current Roommates */}
-          <Card className="frosted-glass bg-card/40">
+          <Card className="frosted-glass bg-card/90">
             <CardHeader>
               <CardTitle className="text-lg font-normal">Current Roommates</CardTitle>
               <CardDescription>
@@ -358,8 +358,8 @@ export function ManageRoommatesModal({
                                     <Crown className="h-4 w-4 text-yellow-500" />
                                   </span>
                                 </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Admin - Can manage roommates and house settings</p>
+                                <TooltipContent className="max-w-xs whitespace-normal">
+                                  <p className="break-words">Admin - Can manage roommates and house settings</p>
                                 </TooltipContent>
                               </Tooltip>
                             )}
@@ -415,7 +415,7 @@ export function ManageRoommatesModal({
 
           {/* Pending Invites */}
           {isAdmin && invites.length > 0 && (
-            <Card className="frosted-glass bg-card/40">
+            <Card className="frosted-glass bg-card/90">
               <CardHeader>
                 <CardTitle className="text-lg font-normal flex items-center gap-2">
                   <Mail className="h-5 w-5" />

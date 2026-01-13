@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldGroup, FieldLabel, FieldDescription } from "@/components/ui/field";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { NativeSelect } from "@/components/ui/native-select";
+import { Badge } from "@/components/ui/badge";
 import { Users, Home, Edit, Save, X, User } from "lucide-react";
 import { ManageRoommatesModal } from "@/components/dashboard/ManageRoommatesModal";
 import { useUser } from "@/contexts/UserContext";
@@ -29,6 +30,8 @@ export default function SettingsPage() {
   const [savingPersonal, setSavingPersonal] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [personalLastUpdated, setPersonalLastUpdated] = useState<Date | null>(null);
+  const [houseLastUpdated, setHouseLastUpdated] = useState<Date | null>(null);
 
   useEffect(() => {
     return () => {
@@ -126,6 +129,9 @@ export default function SettingsPage() {
         timezone,
       });
       
+      // Update last updated timestamp
+      setHouseLastUpdated(new Date());
+      
       // Ref is already updated, so useEffect won't reset values
     } catch (error: any) {
       console.error("Error updating house:", error);
@@ -173,6 +179,9 @@ export default function SettingsPage() {
       
       // Exit edit mode
       setIsEditingPersonal(false);
+      
+      // Update last updated timestamp
+      setPersonalLastUpdated(new Date());
       
     } catch (error: any) {
       console.error("Error updating personal info:", error);
@@ -229,10 +238,17 @@ export default function SettingsPage() {
         <Card className="frosted-glass bg-card/40">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-normal flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Personal Settings
-              </CardTitle>
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-lg font-normal flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  Personal Settings
+                </CardTitle>
+                {personalLastUpdated && (
+                  <Badge variant="outline" className="text-xs font-normal">
+                    Updated {personalLastUpdated.toLocaleString()}
+                  </Badge>
+                )}
+              </div>
               {!isEditingPersonal && (
                 <Button
                   variant="ghost"
@@ -364,10 +380,17 @@ export default function SettingsPage() {
         <Card className="frosted-glass bg-card/40">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-normal flex items-center gap-2">
-                <Home className="h-5 w-5" />
-                House Information
-              </CardTitle>
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-lg font-normal flex items-center gap-2">
+                  <Home className="h-5 w-5" />
+                  House Information
+                </CardTitle>
+                {houseLastUpdated && (
+                  <Badge variant="outline" className="text-xs font-normal">
+                    Updated {houseLastUpdated.toLocaleString()}
+                  </Badge>
+                )}
+              </div>
               {!isEditing && (
                 <Button
                   variant="ghost"
