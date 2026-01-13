@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 
@@ -16,7 +16,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -64,8 +64,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [user, supabase, refreshUser]);
 
   useEffect(() => {
+    let mounted = true;
+    
     // Initial load
-    refreshUser().finally(() => setLoading(false));
+    refreshUser().finally(() => {
+      if (mounted) setLoading(false);
+    });
 
     // Listen for auth state changes
     const {
@@ -81,6 +85,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, [supabase, refreshUser]);

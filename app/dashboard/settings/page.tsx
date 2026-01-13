@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel, FieldDescription } from "@/components/ui/field";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Users, Home, Edit, Save, X, User } from "lucide-react";
@@ -272,11 +272,11 @@ export default function SettingsPage() {
                 {personalError}
               </div>
             )}
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="first-name" className="text-sm font-normal mb-1 block">
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="first-name" className="text-sm font-normal">
                   First Name
-                </Label>
+                </FieldLabel>
                 {isEditingPersonal ? (
                   <Input
                     id="first-name"
@@ -298,11 +298,11 @@ export default function SettingsPage() {
                     })()}
                   </div>
                 )}
-              </div>
-              <div>
-                <Label htmlFor="last-name" className="text-sm font-normal mb-1 block">
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="last-name" className="text-sm font-normal">
                   Last Name
-                </Label>
+                </FieldLabel>
                 {isEditingPersonal ? (
                   <Input
                     id="last-name"
@@ -323,40 +323,40 @@ export default function SettingsPage() {
                     })()}
                   </div>
                 )}
-              </div>
-              <div>
-                <Label htmlFor="email" className="text-sm font-normal mb-1 block">
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="email" className="text-sm font-normal">
                   Email
-                </Label>
+                </FieldLabel>
                 <div className="text-sm font-normal text-muted-foreground">
                   {user?.email}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <FieldDescription>
                   Email cannot be changed here
-                </p>
+                </FieldDescription>
+              </Field>
+            </FieldGroup>
+            {isEditingPersonal && (
+              <div className="flex gap-3 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={handleCancelPersonal}
+                  disabled={savingPersonal}
+                  className="flex-1 font-normal"
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSavePersonal}
+                  disabled={savingPersonal}
+                  className="flex-1 font-normal"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  {savingPersonal ? "Saving..." : "Save Changes"}
+                </Button>
               </div>
-              {isEditingPersonal && (
-                <div className="flex gap-3 pt-2">
-                  <Button
-                    variant="outline"
-                    onClick={handleCancelPersonal}
-                    disabled={savingPersonal}
-                    className="flex-1 font-normal"
-                  >
-                    <X className="h-4 w-4 mr-2" />
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={handleSavePersonal}
-                    disabled={savingPersonal}
-                    className="flex-1 font-normal"
-                  >
-                    <Save className="h-4 w-4 mr-2" />
-                    {savingPersonal ? "Saving..." : "Save Changes"}
-                  </Button>
-                </div>
-              )}
-            </div>
+            )}
           </CardContent>
         </Card>
 
@@ -394,11 +394,11 @@ export default function SettingsPage() {
                 {editError}
               </div>
             )}
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="house-name" className="text-sm font-normal mb-1 block">
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="house-name" className="text-sm font-normal">
                   House Name *
-                </Label>
+                </FieldLabel>
                 {isEditing ? (
                   <Input
                     id="house-name"
@@ -412,11 +412,11 @@ export default function SettingsPage() {
                     {house.name}
                   </div>
                 )}
-              </div>
-              <div>
-                <Label htmlFor="house-address" className="text-sm font-normal mb-1 block">
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="house-address" className="text-sm font-normal">
                   Address (optional)
-                </Label>
+                </FieldLabel>
                 {isEditing ? (
                   <Input
                     id="house-address"
@@ -430,11 +430,11 @@ export default function SettingsPage() {
                     {house.address || "No address set"}
                   </div>
                 )}
-              </div>
-              <div>
-                <Label htmlFor="timezone" className="text-sm font-normal mb-1 block">
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="timezone" className="text-sm font-normal">
                   Timezone
-                </Label>
+                </FieldLabel>
                 {isEditing ? (
                   <NativeSelect
                     id="timezone"
@@ -454,29 +454,29 @@ export default function SettingsPage() {
                     {timezone === "America/New_York" && "Eastern Time"}
                   </div>
                 )}
+              </Field>
+            </FieldGroup>
+            {isEditing && (
+              <div className="flex gap-3 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={handleCancel}
+                  disabled={saving}
+                  className="flex-1 font-normal"
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="flex-1 font-normal"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  {saving ? "Saving..." : "Save Changes"}
+                </Button>
               </div>
-              {isEditing && (
-                <div className="flex gap-3 pt-2">
-                  <Button
-                    variant="outline"
-                    onClick={handleCancel}
-                    disabled={saving}
-                    className="flex-1 font-normal"
-                  >
-                    <X className="h-4 w-4 mr-2" />
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="flex-1 font-normal"
-                  >
-                    <Save className="h-4 w-4 mr-2" />
-                    {saving ? "Saving..." : "Save Changes"}
-                  </Button>
-                </div>
-              )}
-            </div>
+            )}
           </CardContent>
         </Card>
 

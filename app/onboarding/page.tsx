@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Field, FieldGroup, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -239,54 +240,57 @@ export default function OnboardingPage() {
                 Let&apos;s start by setting up your house information
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="house-name">House Nickname *</Label>
-                <Input
-                  id="house-name"
-                  placeholder="1234 Berkeley Ave"
-                  value={houseName}
-                  onChange={(e) => {
-                    setHouseName(e.target.value);
-                    if (houseNameError) setHouseNameError(null);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !loading) {
-                      e.preventDefault();
-                      handleNext();
-                    }
-                  }}
-                  required
-                />
-                {houseNameError && (
-                  <p className="text-xs text-destructive font-light mt-1">{houseNameError}</p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address">Address (optional)</Label>
-                <Input
-                  id="address"
-                  placeholder="123 Main St, Apt 4B, City, State"
-                  value={houseAddress}
-                  onChange={(e) => setHouseAddress(e.target.value)}
-                />
-                <p className="text-xs text-muted-foreground font-light">
-                  Include apartment, suite, or unit number if applicable
-                </p>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="timezone">Timezone</Label>
-                <NativeSelect
-                  id="timezone"
-                  value={timezone}
-                  onChange={(e) => setTimezone(e.target.value)}
-                >
-                  <option value="America/Los_Angeles">Pacific Time</option>
-                  <option value="America/Denver">Mountain Time</option>
-                  <option value="America/Chicago">Central Time</option>
-                  <option value="America/New_York">Eastern Time</option>
-                </NativeSelect>
-              </div>
+            <CardContent>
+              <FieldGroup>
+                <Field data-invalid={!!houseNameError}>
+                  <FieldLabel htmlFor="house-name">House Nickname *</FieldLabel>
+                  <Input
+                    id="house-name"
+                    placeholder="1234 Berkeley Ave"
+                    value={houseName}
+                    onChange={(e) => {
+                      setHouseName(e.target.value);
+                      if (houseNameError) setHouseNameError(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !loading) {
+                        e.preventDefault();
+                        handleNext();
+                      }
+                    }}
+                    required
+                    aria-invalid={!!houseNameError}
+                  />
+                  {houseNameError && (
+                    <FieldError>{houseNameError}</FieldError>
+                  )}
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="address">Address (optional)</FieldLabel>
+                  <Input
+                    id="address"
+                    placeholder="123 Main St, Apt 4B, City, State"
+                    value={houseAddress}
+                    onChange={(e) => setHouseAddress(e.target.value)}
+                  />
+                  <FieldDescription>
+                    Include apartment, suite, or unit number if applicable
+                  </FieldDescription>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="timezone">Timezone</FieldLabel>
+                  <NativeSelect
+                    id="timezone"
+                    value={timezone}
+                    onChange={(e) => setTimezone(e.target.value)}
+                  >
+                    <option value="America/Los_Angeles">Pacific Time</option>
+                    <option value="America/Denver">Mountain Time</option>
+                    <option value="America/Chicago">Central Time</option>
+                    <option value="America/New_York">Eastern Time</option>
+                  </NativeSelect>
+                </Field>
+              </FieldGroup>
             </CardContent>
           </motion.div>
         );
@@ -367,8 +371,8 @@ export default function OnboardingPage() {
                           </div>
 
                           {utility.isRecurring && (
-                            <div className="space-y-2">
-                              <Label>Recurrence</Label>
+                            <Field>
+                              <FieldLabel>Recurrence</FieldLabel>
                               <NativeSelect
                                 value={utility.recurrence}
                                 onChange={(e) =>
@@ -381,11 +385,11 @@ export default function OnboardingPage() {
                                 <option value="weekly">Weekly</option>
                                 <option value="yearly">Yearly</option>
                               </NativeSelect>
-                            </div>
+                            </Field>
                           )}
 
-                          <div className="space-y-2">
-                            <Label>Billing Type</Label>
+                          <Field>
+                            <FieldLabel>Billing Type</FieldLabel>
                             <NativeSelect
                               value={utility.billingType}
                               onChange={(e) =>
@@ -398,10 +402,10 @@ export default function OnboardingPage() {
                               <option value="usage">Usage-Based</option>
                               <option value="mixed">Mixed</option>
                             </NativeSelect>
-                          </div>
+                          </Field>
 
-                          <div className="space-y-2">
-                            <Label>Provider (optional)</Label>
+                          <Field>
+                            <FieldLabel>Provider (optional)</FieldLabel>
                             <Input
                               placeholder="e.g., PG&E, Apartment Portal"
                               value={utility.provider}
@@ -411,7 +415,7 @@ export default function OnboardingPage() {
                                 })
                               }
                             />
-                          </div>
+                          </Field>
 
                           <div className="flex items-center space-x-2">
                             <Checkbox
@@ -591,19 +595,16 @@ export default function OnboardingPage() {
               </div>
 
               <div className="pt-4 border-t space-y-4">
-                <div className="space-y-2">
-                  <Label>Visibility Settings</Label>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="visibility"
-                      checked={visibilitySettings}
-                      onCheckedChange={(checked) => setVisibilitySettings(checked === true)}
-                    />
-                    <Label htmlFor="visibility" className="cursor-pointer">
-                      Everyone can see everyone&apos;s per-person balances
-                    </Label>
-                  </div>
-                </div>
+                <Field orientation="horizontal">
+                  <Checkbox
+                    id="visibility"
+                    checked={visibilitySettings}
+                    onCheckedChange={(checked) => setVisibilitySettings(checked === true)}
+                  />
+                  <FieldLabel htmlFor="visibility" className="cursor-pointer">
+                    Everyone can see everyone&apos;s per-person balances
+                  </FieldLabel>
+                </Field>
               </div>
             </CardContent>
           </motion.div>

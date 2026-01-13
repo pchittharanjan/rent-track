@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEnterKeySubmit } from "@/lib/hooks/useEnterKeySubmit";
 
@@ -96,61 +96,62 @@ export default function SignUpPage() {
                 {error}
               </div>
             )}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-sm font-normal">First Name</Label>
+            <FieldGroup>
+              <div className="grid grid-cols-2 gap-3">
+                <Field>
+                  <FieldLabel htmlFor="firstName" className="text-sm font-normal">First Name</FieldLabel>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="John"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    className="h-11 font-light"
+                  />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="lastName" className="text-sm font-normal">Last Name</FieldLabel>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Doe"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                    className="h-11 font-light"
+                  />
+                </Field>
+              </div>
+              <Field>
+                <FieldLabel htmlFor="email" className="text-sm font-normal">Email</FieldLabel>
                 <Input
-                  id="firstName"
-                  type="text"
-                  placeholder="John"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="h-11 font-light"
                 />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-sm font-normal">Last Name</Label>
+              </Field>
+              <Field data-invalid={!!passwordError}>
+                <FieldLabel htmlFor="password" className="text-sm font-normal">Password</FieldLabel>
                 <Input
-                  id="lastName"
-                  type="text"
-                  placeholder="Doe"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  onKeyDown={handleEnterKey}
                   required
+                  aria-invalid={!!passwordError}
                   className="h-11 font-light"
                 />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-normal">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="h-11 font-light"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-normal">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={handlePasswordChange}
-                onKeyDown={handleEnterKey}
-                required
-                className="h-11 font-light"
-              />
-              {passwordError && (
-                <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-2 text-xs text-destructive font-light mt-1">
-                  {passwordError}
-                </div>
-              )}
-            </div>
+                {passwordError && (
+                  <FieldError>{passwordError}</FieldError>
+                )}
+              </Field>
+            </FieldGroup>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full h-11 font-normal" disabled={loading}>

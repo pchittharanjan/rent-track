@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { UserPlus, Mail, X, Crown, User, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHouse } from "@/contexts/HouseContext";
+import { useUser } from "@/contexts/UserContext";
 
 interface ManageRoommatesModalProps {
   open: boolean;
@@ -44,6 +46,7 @@ export function ManageRoommatesModal({
   onSuccess,
 }: ManageRoommatesModalProps) {
   const supabase = createClient();
+  const { user } = useUser();
   const { houseMembers, refreshHouseMembers, removeHouseMember, updateHouseMember } = useHouse();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,13 +84,29 @@ export function ManageRoommatesModal({
       const roommatesWithInfo = houseMembers.map((member) => {
         // Use the current user's info if it matches
         const isCurrentUser = member.user_id === currentUserId;
+        
+        // Get display name and email for current user
+        if (isCurrentUser && user) {
+          const displayName = user.user_metadata?.first_name || user.email?.split("@")[0] || "User";
+          const displayEmail = user.email || "";
+          return {
+            id: member.id,
+            user_id: member.user_id,
+            role: member.role,
+            joined_at: member.joined_at,
+            email: displayEmail,
+            name: displayName,
+          };
+        }
+        
+        // For other users, show placeholder (until we have profiles table)
         return {
           id: member.id,
           user_id: member.user_id,
           role: member.role,
           joined_at: member.joined_at,
-          email: isCurrentUser ? "You" : `User ${member.user_id.slice(0, 8)}`,
-          name: isCurrentUser ? "You" : `Roommate ${member.user_id.slice(0, 8)}`,
+          email: `User ${member.user_id.slice(0, 8)}`,
+          name: `Roommate ${member.user_id.slice(0, 8)}`,
         };
       });
 
@@ -250,8 +269,9 @@ export function ManageRoommatesModal({
   if (!house) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto frosted-glass bg-card/90 shadow-2xl">
+    <TooltipProvider>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto frosted-glass bg-card/90 shadow-2xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-light tracking-tight font-serif">
             Manage Roommates
@@ -332,7 +352,16 @@ export function ManageRoommatesModal({
                               {roommate.name}
                             </span>
                             {roommate.role === "admin" && (
-                              <Crown className="h-4 w-4 text-yellow-500" />
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="inline-flex items-center cursor-help">
+                                    <Crown className="h-4 w-4 text-yellow-500" />
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Admin - Can manage roommates and house settings</p>
+                                </TooltipContent>
+                              </Tooltip>
                             )}
                           </div>
                           <div className="text-xs text-muted-foreground truncate">
@@ -430,5 +459,6 @@ export function ManageRoommatesModal({
         </div>
       </DialogContent>
     </Dialog>
+    </TooltipProvider>
   );
 }

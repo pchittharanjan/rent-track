@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -182,98 +182,100 @@ export function AddChargeModal({ open, onOpenChange, house, onSuccess, onOpenAdd
                 </div>
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="category" className="text-sm font-normal">
-                  Category *
-                </Label>
-                <NativeSelect
-                  id="category"
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                  required
-                >
-                  <option value="">Select a category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </NativeSelect>
-              </div>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="category" className="text-sm font-normal">
+                    Category *
+                  </FieldLabel>
+                  <NativeSelect
+                    id="category"
+                    value={categoryId}
+                    onChange={(e) => setCategoryId(e.target.value)}
+                    required
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </Field>
 
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-sm font-normal">
-                  Description *
-                </Label>
-                <Input
-                  id="description"
-                  type="text"
-                  placeholder="e.g., January Rent"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                  className="h-11 font-light"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="amount" className="text-sm font-normal">
-                    Total Amount *
-                  </Label>
+                <Field>
+                  <FieldLabel htmlFor="description" className="text-sm font-normal">
+                    Description *
+                  </FieldLabel>
                   <Input
-                    id="amount"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    placeholder="0.00"
-                    value={totalAmount}
-                    onChange={(e) => setTotalAmount(e.target.value)}
+                    id="description"
+                    type="text"
+                    placeholder="e.g., January Rent"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                     required
                     className="h-11 font-light"
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="dueDate" className="text-sm font-normal">
-                    Due Date *
-                  </Label>
-                  <DatePicker
-                    id="dueDate"
-                    value={dueDate}
-                    onChange={(value) => setDueDate(value)}
-                    placeholder="Select due date"
-                    className="h-11 font-light"
-                    required
-                  />
-                </div>
-              </div>
+                </Field>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="billPeriodStart" className="text-sm font-normal">
-                    Bill Period Start (optional)
-                  </Label>
-                  <DatePicker
-                    id="billPeriodStart"
-                    value={billPeriodStart}
-                    onChange={(value) => setBillPeriodStart(value)}
+                <div className="grid grid-cols-2 gap-4">
+                  <Field>
+                    <FieldLabel htmlFor="amount" className="text-sm font-normal">
+                      Total Amount *
+                    </FieldLabel>
+                    <Input
+                      id="amount"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder="0.00"
+                      value={totalAmount}
+                      onChange={(e) => setTotalAmount(e.target.value)}
+                      required
+                      className="h-11 font-light"
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="dueDate" className="text-sm font-normal">
+                      Due Date *
+                    </FieldLabel>
+                    <DatePicker
+                      id="dueDate"
+                      value={dueDate}
+                      onChange={(value) => setDueDate(value)}
+                      placeholder="Select due date"
+                      className="h-11 font-light"
+                      required
+                    />
+                  </Field>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <Field>
+                    <FieldLabel htmlFor="billPeriodStart" className="text-sm font-normal">
+                      Bill Period Start (optional)
+                    </FieldLabel>
+                    <DatePicker
+                      id="billPeriodStart"
+                      value={billPeriodStart}
+                      onChange={(value) => setBillPeriodStart(value)}
                     placeholder="Select start date"
                     className="h-11 font-light"
                   />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="billPeriodEnd" className="text-sm font-normal">
+                      Bill Period End (optional)
+                    </FieldLabel>
+                    <DatePicker
+                      id="billPeriodEnd"
+                      value={billPeriodEnd}
+                      onChange={(value) => setBillPeriodEnd(value)}
+                      placeholder="Select end date"
+                      className="h-11 font-light"
+                    />
+                  </Field>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="billPeriodEnd" className="text-sm font-normal">
-                    Bill Period End (optional)
-                  </Label>
-                  <DatePicker
-                    id="billPeriodEnd"
-                    value={billPeriodEnd}
-                    onChange={(value) => setBillPeriodEnd(value)}
-                    placeholder="Select end date"
-                    className="h-11 font-light"
-                  />
-                </div>
-              </div>
+              </FieldGroup>
 
               <div className="flex gap-3 pt-4">
                 <Button

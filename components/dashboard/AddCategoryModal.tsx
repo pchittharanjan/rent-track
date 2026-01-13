@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -130,67 +131,69 @@ export function AddCategoryModal({ open, onOpenChange, house, onSuccess }: AddCa
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-normal">
-                Category Name *
-              </Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="e.g., Internet, Parking, HOA Fees"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="h-11 font-light"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="type" className="text-sm font-normal">
-                  Type *
-                </Label>
-                    <NativeSelect
-                  id="type"
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="name" className="text-sm font-normal">
+                  Category Name *
+                </FieldLabel>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="e.g., Internet, Parking, HOA Fees"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   required
-                >
-                  <option value="rent">Rent</option>
-                  <option value="utility">Utility</option>
-                  <option value="other">Other</option>
-                </NativeSelect>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="billingType" className="text-sm font-normal">
-                  Billing Type *
-                </Label>
-                    <NativeSelect
-                  id="billingType"
-                  value={billingType}
-                  onChange={(e) => setBillingType(e.target.value)}
-                  required
-                >
-                  <option value="flat">Flat Rate</option>
-                  <option value="usage">Usage-Based</option>
-                  <option value="mixed">Mixed</option>
-                </NativeSelect>
-              </div>
-            </div>
+                  className="h-11 font-light"
+                />
+              </Field>
 
-            <div className="space-y-2">
-              <Label htmlFor="provider" className="text-sm font-normal">
-                Provider/Company (optional)
-              </Label>
-              <Input
-                id="provider"
-                type="text"
-                placeholder="e.g., Comcast, PG&E, Landlord Name"
-                value={provider}
-                onChange={(e) => setProvider(e.target.value)}
-                className="h-11 font-light"
-              />
-            </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Field>
+                  <FieldLabel htmlFor="type" className="text-sm font-normal">
+                    Type *
+                  </FieldLabel>
+                  <NativeSelect
+                    id="type"
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                    required
+                  >
+                    <option value="rent">Rent</option>
+                    <option value="utility">Utility</option>
+                    <option value="other">Other</option>
+                  </NativeSelect>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="billingType" className="text-sm font-normal">
+                    Billing Type *
+                  </FieldLabel>
+                  <NativeSelect
+                    id="billingType"
+                    value={billingType}
+                    onChange={(e) => setBillingType(e.target.value)}
+                    required
+                  >
+                    <option value="flat">Flat Rate</option>
+                    <option value="usage">Usage-Based</option>
+                    <option value="mixed">Mixed</option>
+                  </NativeSelect>
+                </Field>
+              </div>
+
+              <Field>
+                <FieldLabel htmlFor="provider" className="text-sm font-normal">
+                  Provider/Company (optional)
+                </FieldLabel>
+                <Input
+                  id="provider"
+                  type="text"
+                  placeholder="e.g., Comcast, PG&E, Landlord Name"
+                  value={provider}
+                  onChange={(e) => setProvider(e.target.value)}
+                  className="h-11 font-light"
+                />
+              </Field>
+            </FieldGroup>
 
             <div className="flex items-center space-x-2">
                 <Checkbox
@@ -215,11 +218,11 @@ export function AddCategoryModal({ open, onOpenChange, house, onSuccess }: AddCa
             </div>
 
             {isRecurring && (
-              <div className="space-y-2">
-                <Label htmlFor="recurrence" className="text-sm font-normal">
+              <Field>
+                <FieldLabel htmlFor="recurrence" className="text-sm font-normal">
                   Recurrence *
-                </Label>
-                    <NativeSelect
+                </FieldLabel>
+                <NativeSelect
                   id="recurrence"
                   value={recurrence}
                   onChange={(e) => setRecurrence(e.target.value)}
@@ -229,7 +232,7 @@ export function AddCategoryModal({ open, onOpenChange, house, onSuccess }: AddCa
                   <option value="weekly">Weekly</option>
                   <option value="yearly">Yearly</option>
                 </NativeSelect>
-              </div>
+              </Field>
             )}
 
             <div className="flex gap-3 pt-4">

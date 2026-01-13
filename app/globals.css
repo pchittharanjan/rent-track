@@ -1,8 +1,8 @@
+@import "react-day-picker/dist/style.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "react-day-picker/dist/style.css";
 
 @layer base {
   :root {
@@ -38,7 +38,7 @@
     --foreground: 0 0% 98%;
     --card: 240 15% 8% / 0.7;
     --card-foreground: 0 0% 98%;
-    --popover: 240 15% 8% / 0.7;
+    --popover: 240 15% 8%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 15% 12%;

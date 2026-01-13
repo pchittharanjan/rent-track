@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { useEnterKeySubmit } from "@/lib/hooks/useEnterKeySubmit";
@@ -76,7 +76,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
       <Card className="w-full max-w-md frosted-glass border-border/20 shadow-2xl">
-        <CardHeader className="space-y-5">
+        <CardHeader className="space-y-2">
           <CardTitle className="text-2xl font-light tracking-tight">Welcome back</CardTitle>
           <CardDescription className="text-base font-light">
             Sign in to your account to continue
@@ -89,32 +89,34 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-normal">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={loading}
-                className="h-11 font-light"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-normal">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={handleEnterKey}
-                required
-                disabled={loading}
-                className="h-11 font-light"
-              />
-            </div>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="email" className="text-sm font-normal">Email</FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="h-11 font-light"
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="password" className="text-sm font-normal">Password</FieldLabel>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleEnterKey}
+                  required
+                  disabled={loading}
+                  className="h-11 font-light"
+                />
+              </Field>
+            </FieldGroup>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full h-11 font-normal" disabled={loading}>

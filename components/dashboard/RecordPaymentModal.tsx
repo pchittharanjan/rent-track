@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -161,120 +161,121 @@ export function RecordPaymentModal({ open, onOpenChange, house, onSuccess }: Rec
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="payer" className="text-sm font-normal">
-                  Paid By *
-                </Label>
-                <NativeSelect
-                  id="payer"
-                  value={payerId}
-                  onChange={(e) => setPayerId(e.target.value)}
-                  required
-                >
-                  <option value="">Select payer</option>
-                  {members.map((member) => (
-                    <option key={member.id} value={member.id}>
-                      {member.name}
-                    </option>
-                  ))}
-                </NativeSelect>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="recipient" className="text-sm font-normal">
-                  Paid To (optional)
-                </Label>
-                <NativeSelect
-                  id="recipient"
-                  value={recipientId}
-                  onChange={(e) => setRecipientId(e.target.value)}
-                >
-                  <option value="">Payment to provider</option>
-                  {members
-                    .filter((m) => m.id !== payerId)
-                    .map((member) => (
+            <FieldGroup>
+              <div className="grid grid-cols-2 gap-4">
+                <Field>
+                  <FieldLabel htmlFor="payer" className="text-sm font-normal">
+                    Paid By *
+                  </FieldLabel>
+                  <NativeSelect
+                    id="payer"
+                    value={payerId}
+                    onChange={(e) => setPayerId(e.target.value)}
+                    required
+                  >
+                    <option value="">Select payer</option>
+                    {members.map((member) => (
                       <option key={member.id} value={member.id}>
                         {member.name}
                       </option>
                     ))}
-                </NativeSelect>
+                  </NativeSelect>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="recipient" className="text-sm font-normal">
+                    Paid To (optional)
+                  </FieldLabel>
+                  <NativeSelect
+                    id="recipient"
+                    value={recipientId}
+                    onChange={(e) => setRecipientId(e.target.value)}
+                  >
+                    <option value="">Payment to provider</option>
+                    {members
+                      .filter((m) => m.id !== payerId)
+                      .map((member) => (
+                        <option key={member.id} value={member.id}>
+                          {member.name}
+                        </option>
+                      ))}
+                  </NativeSelect>
+                </Field>
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="amount" className="text-sm font-normal">
-                  Amount *
-                </Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  required
-                  className="h-11 font-light"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <Field>
+                  <FieldLabel htmlFor="amount" className="text-sm font-normal">
+                    Amount *
+                  </FieldLabel>
+                  <Input
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                    className="h-11 font-light"
+                  />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="date" className="text-sm font-normal">
+                    Payment Date *
+                  </FieldLabel>
+                  <DatePicker
+                    id="date"
+                    value={date}
+                    onChange={(value) => setDate(value)}
+                    placeholder="Select payment date"
+                    className="h-11 font-light"
+                    required
+                  />
+                </Field>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="date" className="text-sm font-normal">
-                  Payment Date *
-                </Label>
-                <DatePicker
-                  id="date"
-                  value={date}
-                  onChange={(value) => setDate(value)}
-                  placeholder="Select payment date"
-                  className="h-11 font-light"
-                  required
-                />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="category" className="text-sm font-normal">
-                  Category (optional)
-                </Label>
-                <NativeSelect
-                  id="category"
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                >
-                  <option value="">No category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </NativeSelect>
+              <div className="grid grid-cols-2 gap-4">
+                <Field>
+                  <FieldLabel htmlFor="category" className="text-sm font-normal">
+                    Category (optional)
+                  </FieldLabel>
+                  <NativeSelect
+                    id="category"
+                    value={categoryId}
+                    onChange={(e) => setCategoryId(e.target.value)}
+                  >
+                    <option value="">No category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="paymentMethod" className="text-sm font-normal">
+                    Payment Method (optional)
+                  </FieldLabel>
+                  <Input
+                    id="paymentMethod"
+                    type="text"
+                    placeholder="e.g., Venmo, Zelle, Cash"
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="h-11 font-light"
+                  />
+                </Field>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="paymentMethod" className="text-sm font-normal">
-                  Payment Method (optional)
-                </Label>
-                <Input
-                  id="paymentMethod"
-                  type="text"
-                  placeholder="e.g., Venmo, Zelle, Cash"
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="h-11 font-light"
-                />
-              </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="notes" className="text-sm font-normal">
-                Notes (optional)
-              </Label>
-              <Textarea
-                id="notes"
-                placeholder="Add any additional notes..."
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+              <Field>
+                <FieldLabel htmlFor="notes" className="text-sm font-normal">
+                  Notes (optional)
+                </FieldLabel>
+                <Textarea
+                  id="notes"
+                  placeholder="Add any additional notes..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
                 onKeyDown={(e) => {
                   // Allow Ctrl+Enter or Cmd+Enter to submit from textarea
                   if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
@@ -285,7 +286,8 @@ export function RecordPaymentModal({ open, onOpenChange, house, onSuccess }: Rec
                 rows={3}
                 className="font-light resize-none"
               />
-            </div>
+              </Field>
+            </FieldGroup>
 
             <div className="flex gap-3 pt-4">
               <Button

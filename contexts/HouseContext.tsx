@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "./UserContext";
 
@@ -44,7 +44,7 @@ export function HouseProvider({ children }: { children: React.ReactNode }) {
   const [houses, setHouses] = useState<House[]>([]);
   const [houseMembers, setHouseMembers] = useState<HouseMember[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const currentHouseIdRef = useRef<string | null>(null);
 
   const refreshHouse = useCallback(async () => {
@@ -254,6 +254,8 @@ export function HouseProvider({ children }: { children: React.ReactNode }) {
 
   // Load houses when user is available
   useEffect(() => {
+    let mounted = true;
+    
     if (!user) {
       setHouse(null);
       setHouses([]);
@@ -264,11 +266,20 @@ export function HouseProvider({ children }: { children: React.ReactNode }) {
 
     async function loadData() {
       setLoading(true);
-      await refreshHouse();
-      setLoading(false);
+      try {
+        await refreshHouse();
+      } catch (error) {
+        console.error("Error loading house data:", error);
+      } finally {
+        if (mounted) setLoading(false);
+      }
     }
 
     loadData();
+    
+    return () => {
+      mounted = false;
+    };
   }, [user, refreshHouse]);
 
   // Load house members when house changes

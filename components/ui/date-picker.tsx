@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -23,6 +22,24 @@ interface DatePickerProps {
   required?: boolean
 }
 
+function formatDate(date: Date | undefined) {
+  if (!date) {
+    return ""
+  }
+  return date.toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  })
+}
+
+function isValidDate(date: Date | undefined) {
+  if (!date) {
+    return false
+  }
+  return !isNaN(date.getTime())
+}
+
 export function DatePicker({
   value,
   onChange,
@@ -33,64 +50,80 @@ export function DatePicker({
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false)
   const date = value ? new Date(value) : undefined
+  const [month, setMonth] = React.useState<Date | undefined>(date)
+  const [inputValue, setInputValue] = React.useState(formatDate(date))
 
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return ""
-    return format(date, "MMM dd, yyyy")
-  }
-
-  const handleDateSelect = (selectedDate: Date | undefined) => {
-    if (selectedDate) {
-      const isoString = selectedDate.toISOString().split("T")[0] // YYYY-MM-DD
-      onChange?.(isoString)
-      setOpen(false)
+  React.useEffect(() => {
+    if (value) {
+      const newDate = new Date(value)
+      if (isValidDate(newDate)) {
+        setInputValue(formatDate(newDate))
+        setMonth(newDate)
+      }
+    } else {
+      setInputValue("")
     }
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value
-    // Try to parse the input as a date
-    const parsedDate = new Date(inputValue)
-    if (!isNaN(parsedDate.getTime())) {
-      const isoString = parsedDate.toISOString().split("T")[0]
-      onChange?.(isoString)
-    }
-  }
+  }, [value])
 
   return (
-    <div className={cn("relative", className)}>
+    <div className="relative flex gap-2">
+      <Input
+        id={id}
+        value={inputValue}
+        placeholder={placeholder}
+        className={cn("bg-background pr-10", className)}
+        onChange={(e) => {
+          const date = new Date(e.target.value)
+          setInputValue(e.target.value)
+          if (isValidDate(date)) {
+            const isoString = date.toISOString().split("T")[0]
+            onChange?.(isoString)
+            setMonth(date)
+          }
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault()
+            setOpen(true)
+          }
+        }}
+        required={required}
+      />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            id={`${id}-picker`}
             variant="ghost"
-            className={cn(
-              "absolute right-2 top-1/2 h-6 w-6 -translate-y-1/2 p-0 hover:bg-transparent"
-            )}
+            className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
             type="button"
           >
-            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="sr-only">Pick a date</span>
+            <CalendarIcon className="size-3.5" />
+            <span className="sr-only">Select date</span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="end">
+        <PopoverContent
+          className="w-auto overflow-hidden p-0"
+          align="end"
+          alignOffset={-8}
+          sideOffset={10}
+        >
           <Calendar
             mode="single"
             selected={date}
-            onSelect={handleDateSelect}
-            initialFocus
+            captionLayout="dropdown"
+            month={month}
+            onMonthChange={setMonth}
+            onSelect={(date) => {
+              if (date) {
+                const isoString = date.toISOString().split("T")[0]
+                setInputValue(formatDate(date))
+                onChange?.(isoString)
+                setOpen(false)
+              }
+            }}
           />
         </PopoverContent>
       </Popover>
-      <Input
-        id={id}
-        type="text"
-        value={date ? formatDate(date) : ""}
-        placeholder={placeholder}
-        onChange={handleInputChange}
-        onFocus={() => setOpen(true)}
-        className="pr-10"
-        required={required}
-      />
     </div>
   )
 }

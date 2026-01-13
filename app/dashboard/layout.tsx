@@ -164,7 +164,10 @@ export default function DashboardLayout({
               <Button variant="ghost" size="icon" className="h-9 w-9">
                 <Bell className="h-5 w-5 stroke-[1.5]" />
               </Button>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted/10">
+              <Link
+                href="/dashboard/settings"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted/10 hover:bg-muted/20 transition-colors cursor-pointer"
+              >
                 <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-normal">
                   {(user?.user_metadata?.first_name?.[0] || user?.email?.[0] || "U").toUpperCase()}
                 </div>
@@ -176,7 +179,7 @@ export default function DashboardLayout({
                     {user?.email}
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </header>
