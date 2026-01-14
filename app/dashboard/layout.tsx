@@ -20,6 +20,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useUser } from "@/contexts/UserContext";
 import { useHouse } from "@/contexts/HouseContext";
+import { Badge } from "@/components/ui/badge";
+import { BUILD_TIME } from "@/lib/build-info";
 
 export default function DashboardLayout({
   children,
@@ -160,7 +162,10 @@ export default function DashboardLayout({
                 />
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <Badge variant="outline" className="text-xs font-normal">
+                Updated {new Date(BUILD_TIME).toLocaleString()}
+              </Badge>
               <Button variant="ghost" size="icon" className="h-9 w-9">
                 <Bell className="h-5 w-5 stroke-[1.5]" />
               </Button>
